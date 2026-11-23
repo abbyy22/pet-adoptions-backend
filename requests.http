@@ -1,0 +1,83 @@
+### Pengujian REST Client (ekstensi VS Code "REST Client" oleh Huachao Mao)
+### Klik "Send Request" di atas tiap blok. Jalankan server dulu: npm run start:dev
+
+@baseUrl = http://localhost:3000
+
+### 1. GET semua hewan
+GET {{baseUrl}}/pets
+
+### 2. GET dengan filter jenis dan pencarian
+GET {{baseUrl}}/pets?jenis=kucing&q=tenang
+
+### 3. GET satu hewan
+GET {{baseUrl}}/pets/1
+
+### 4. POST tambah hewan (payload persis seperti PetForm: nama, jenis, umur)
+POST {{baseUrl}}/pets
+Content-Type: application/json
+
+{
+  "nama": "Mochi",
+  "jenis": "Kucing",
+  "umur": 5
+}
+
+### 5. POST dengan field lengkap
+POST {{baseUrl}}/pets
+Content-Type: application/json
+
+{
+  "nama": "Choco",
+  "jenis": "Anjing",
+  "ras": "Pomeranian",
+  "jenisKelamin": "Jantan",
+  "umur": 9,
+  "lokasi": "Haven Hill Haven",
+  "deskripsi": "Aktif dan sangat suka bermain bola.",
+  "sifat": ["Aktif & Lincah", "Vaksin Penuh"],
+  "sudahSteril": true,
+  "status": "Siap Dijemput",
+  "tanggalMasuk": "2026-11-20"
+}
+
+### 6. PATCH ubah sebagian data
+PATCH {{baseUrl}}/pets/9
+Content-Type: application/json
+
+{
+  "umur": 6,
+  "status": "Dalam Proses"
+}
+
+### 7. DELETE hapus hewan
+DELETE {{baseUrl}}/pets/9
+
+### ---------- Skenario error ----------
+
+### E1. 400 Bad Request: validasi DTO gagal
+POST {{baseUrl}}/pets
+Content-Type: application/json
+
+{
+  "nama": "A",
+  "jenis": "",
+  "umur": -3,
+  "status": "Hilang"
+}
+
+### E2. 404 Not Found: id tidak ada
+GET {{baseUrl}}/pets/9999
+
+### E3. 409 Conflict: data duplikat (Milo sudah ada)
+POST {{baseUrl}}/pets
+Content-Type: application/json
+
+{
+  "nama": "Milo",
+  "jenis": "Kucing",
+  "ras": "Tabby Orange Domestik",
+  "umur": 18
+}
+
+### E4. 400 Bad Request: id bukan angka
+GET {{baseUrl}}/pets/abc
